@@ -1,0 +1,781 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ECO WORLD — Экология Казахстана</title>
+
+<style>
+:root {
+  --bg:#edf5ed;
+  --card:#fff;
+  --text:#183b2b;
+  --muted:#587363;
+  --accent:#26834f;
+  --accent2:#b5dfb8;
+  --shadow:0 12px 35px rgba(25,70,45,.12);
+}
+body.dark {
+  --bg:#10251c;
+  --card:#1d382b;
+  --text:#eff8ef;
+  --muted:#b5cabb;
+  --accent:#75c991;
+  --accent2:#315b41;
+  --shadow:0 12px 35px rgba(0,0,0,.25);
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:background .4s,color .4s;
+}
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 5%;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.logo {font-weight:bold;font-size:20px}
+.controls {display:flex;gap:8px;flex-wrap:wrap}
+button {
+  border:none;
+  padding:10px 15px;
+  border-radius:12px;
+  cursor:pointer;
+  background:var(--accent);
+  color:white;
+  font-weight:bold;
+  transition:.25s;
+}
+button:hover {transform:translateY(-2px);opacity:.9}
+button.secondary {
+  background:var(--card);
+  color:var(--text);
+  box-shadow:var(--shadow);
+}
+.presentation {
+  max-width:1100px;
+  margin:15px auto;
+  padding:0 20px;
+}
+.slide {
+  display:none;
+  min-height:570px;
+  background:var(--card);
+  border-radius:24px;
+  padding:35px;
+  box-shadow:var(--shadow);
+}
+.slide.active {
+  display:block;
+  animation:slideEnter .8s ease both;
+}
+@keyframes slideEnter {
+  from {opacity:0;transform:translateY(18px)}
+  to {opacity:1;transform:translateY(0)}
+}
+.reveal {
+  opacity:0;
+  transform:translateY(22px);
+}
+.slide.active .reveal {
+  animation:revealItem .8s ease forwards;
+  animation-delay:calc(var(--order,0) * 3s);
+}
+@keyframes revealItem {
+  to {opacity:1;transform:translateY(0)}
+}
+h1 {font-size:clamp(30px,5vw,52px);margin:15px 0}
+h2 {font-size:clamp(25px,4vw,36px);margin-top:0}
+h3 {margin-bottom:8px}
+p,li {font-size:18px;line-height:1.6}
+.subtitle {color:var(--muted);font-size:20px}
+.tag {
+  display:inline-block;
+  padding:8px 14px;
+  border-radius:30px;
+  background:var(--accent2);
+  color:var(--text);
+  font-weight:bold;
+}
+.hero {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:28px;
+  align-items:center;
+}
+.hero-photo {
+  width:100%;
+  height:auto;
+  max-height:330px;
+  object-fit:contain;
+  display:block;
+  border-radius:18px;
+  background:var(--bg);
+}
+.photo-frame {
+  width:100%;
+  min-height:220px;
+  background:var(--bg);
+  border-radius:18px;
+  padding:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.photo-frame img {
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:320px;
+  object-fit:contain;
+  border-radius:12px;
+}
+.two-columns {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:25px;
+  align-items:center;
+}
+.info-card {
+  background:var(--bg);
+  border-radius:18px;
+  padding:20px;
+  margin:10px 0;
+  transition:transform .3s;
+}
+.info-card:hover {transform:translateY(-5px)}
+.info-card p {margin:5px 0}
+.icon {font-size:35px}
+ul {padding-left:25px}
+.navigation {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin:18px 0 15px;
+}
+.progress {
+  height:8px;
+  background:var(--accent2);
+  border-radius:10px;
+  overflow:hidden;
+  flex:1;
+}
+.progress-bar {
+  height:100%;
+  width:12.5%;
+  background:var(--accent);
+  transition:.4s;
+}
+.counter {color:var(--muted);font-weight:bold}
+.footer {
+  text-align:center;
+  padding:15px;
+  color:var(--muted);
+}
+.number-icon {
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  display:inline-flex;
+  justify-content:center;
+  align-items:center;
+  background:var(--accent);
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+  margin-bottom:8px;
+}
+.slide-six-photo {
+  width:100%;
+  height:auto;
+  max-height:400px;
+  object-fit:contain;
+  display:block;
+  border-radius:16px;
+}
+.timer-panel {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin:10px auto 25px;
+  flex-wrap:wrap;
+}
+.timer-text {
+  color:var(--muted);
+  font-size:14px;
+}
+@media(max-width:750px) {
+  .hero,.two-columns {grid-template-columns:1fr}
+  .slide {padding:22px;min-height:auto}
+  p,li {font-size:16px}
+}
+@media(max-height:650px) {
+  .slide {min-height:auto}
+  .hero-photo {max-height:250px}
+  .photo-frame img {max-height:230px}
+}
+@media(prefers-reduced-motion:reduce) {
+  *,*::before,*::after {
+    animation-duration:.01ms!important;
+    transition-duration:.01ms!important;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">ECO WORLD</div>
+  <div class="controls">
+    <button class="secondary" onclick="changeLanguage()">ҚАЗ / РУС</button>
+    <button class="secondary" onclick="toggleTheme()">🌙 / ☀️</button>
+    <button onclick="fullScreen()">⛶ Экран</button>
+  </div>
+</header>
+
+<main class="presentation">
+
+<!-- СЛАЙД 1 -->
+<section class="slide active">
+  <div class="hero">
+    <div>
+      <span class="tag reveal" style="--order:0"
+        data-ru="Экология Казахстана"
+        data-kz="Қазақстан экологиясы">Экология Казахстана</span>
+
+      <h1 class="reveal" style="--order:1"
+        data-ru="Вредные производства и их влияние на окружающую среду"
+        data-kz="Зиянды өндірістер және олардың қоршаған ортаға әсері">
+        Вредные производства и их влияние на окружающую среду
+      </h1>
+
+      <p class="subtitle reveal" style="--order:2"
+        data-ru="Как промышленность влияет на природу и что мы можем изменить"
+        data-kz="Өнеркәсіп табиғатқа қалай әсер етеді және біз нені өзгерте аламыз">
+        Как промышленность влияет на природу и что мы можем изменить
+      </p>
+    </div>
+
+    <img class="hero-photo reveal" style="--order:1"
+      src="https://images.unsplash.com/photo-1516937941344-00b4e0337589?w=1200"
+      alt="Промышленное производство">
+  </div>
+</section>
+
+<!-- СЛАЙД 2 -->
+<section class="slide">
+  <h2 class="reveal" style="--order:0"
+    data-ru="Что такое вредные производства?"
+    data-kz="Зиянды өндірістер дегеніміз не?">
+    Что такое вредные производства?
+  </h2>
+
+  <div class="two-columns">
+    <div>
+      <p class="reveal" style="--order:1"
+        data-ru="Это предприятия, которые загрязняют воздух, воду и почву в процессе своей работы."
+        data-kz="Бұл жұмыс барысында ауаны, суды және топырақты ластайтын кәсіпорындар.">
+        Это предприятия, которые загрязняют воздух, воду и почву в процессе своей работы.
+      </p>
+
+      <div class="info-card reveal" style="--order:2">
+        <span class="icon">🏭</span>
+        <h3 data-ru="Основные источники" data-kz="Негізгі көздері">Основные источники</h3>
+        <ul>
+          <li data-ru="Заводы и фабрики" data-kz="Зауыттар мен фабрикалар">Заводы и фабрики</li>
+          <li data-ru="Нефтегазовая промышленность" data-kz="Мұнай-газ өнеркәсібі">Нефтегазовая промышленность</li>
+          <li data-ru="Горнодобывающие предприятия" data-kz="Тау-кен өндірісі">Горнодобывающие предприятия</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="photo-frame reveal" style="--order:2">
+      <img src="https://images.unsplash.com/photo-1567789884554-0b844b597180?w=1200"
+        alt="Промышленные трубы">
+    </div>
+  </div>
+</section>
+
+<!-- СЛАЙД 3 -->
+<section class="slide">
+  <h2 class="reveal" style="--order:0"
+    data-ru="Основные виды загрязнения"
+    data-kz="Ластанудың негізгі түрлері">
+    Основные виды загрязнения
+  </h2>
+
+  <div class="two-columns">
+    <div class="info-card reveal" style="--order:1">
+      <span class="icon">🌫️</span>
+      <h3 data-ru="Загрязнение воздуха" data-kz="Ауаның ластануы">Загрязнение воздуха</h3>
+      <p data-ru="Выбросы дыма и вредных газов в атмосферу."
+         data-kz="Атмосфераға түтін мен зиянды газдардың таралуы.">
+        Выбросы дыма и вредных газов в атмосферу.
+      </p>
+    </div>
+
+    <div class="info-card reveal" style="--order:2">
+      <span class="icon">💧</span>
+      <h3 data-ru="Загрязнение воды" data-kz="Судың ластануы">Загрязнение воды</h3>
+      <p data-ru="Попадание отходов и химикатов в водоёмы."
+         data-kz="Қалдықтар мен химиялық заттардың суға түсуі.">
+        Попадание отходов и химикатов в водоёмы.
+      </p>
+    </div>
+
+    <div class="info-card reveal" style="--order:3">
+      <span class="icon">🌱</span>
+      <h3 data-ru="Загрязнение почвы" data-kz="Топырақтың ластануы">Загрязнение почвы</h3>
+      <p data-ru="Накопление токсичных веществ в земле."
+         data-kz="Жерде улы заттардың жиналуы.">
+        Накопление токсичных веществ в земле.
+      </p>
+    </div>
+
+    <div class="info-card reveal" style="--order:4">
+      <span class="icon">🔊</span>
+      <h3 data-ru="Шумовое загрязнение" data-kz="Шудың ластануы">Шумовое загрязнение</h3>
+      <p data-ru="Сильный шум от техники и оборудования."
+         data-kz="Техника мен жабдықтардан шығатын қатты шу.">
+        Сильный шум от техники и оборудования.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- СЛАЙД 4 -->
+<section class="slide">
+  <h2 class="reveal" style="--order:0"
+    data-ru="Влияние на природу"
+    data-kz="Табиғатқа әсері">
+    Влияние на природу
+  </h2>
+
+  <div class="hero">
+    <div>
+      <p class="reveal" style="--order:1"
+        data-ru="Вредные производства могут приводить к:"
+        data-kz="Зиянды өндірістер мынадай жағдайларға әкелуі мүмкін:">
+        Вредные производства могут приводить к:
+      </p>
+
+      <ul>
+        <li class="reveal" style="--order:2"
+          data-ru="Гибели растений и животных"
+          data-kz="Өсімдіктер мен жануарлардың жойылуына">
+          Гибели растений и животных
+        </li>
+
+        <li class="reveal" style="--order:3"
+          data-ru="Ухудшению качества воды"
+          data-kz="Су сапасының төмендеуіне">
+          Ухудшению качества воды
+        </li>
+
+        <li class="reveal" style="--order:4"
+          data-ru="Изменению климата"
+          data-kz="Климаттың өзгеруіне">
+          Изменению климата
+        </li>
+
+        <li class="reveal" style="--order:5"
+          data-ru="Разрушению природных экосистем"
+          data-kz="Табиғи экожүйелердің бұзылуына">
+          Разрушению природных экосистем
+        </li>
+      </ul>
+    </div>
+
+    <img class="hero-photo reveal" style="--order:2"
+      src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1200"
+      alt="Природный ландшафт">
+  </div>
+</section>
+
+<!-- СЛАЙД 5 -->
+<section class="slide">
+  <h2 class="reveal" style="--order:0"
+    data-ru="Как загрязнение влияет на человека?"
+    data-kz="Ластану адамға қалай әсер етеді?">
+    Как загрязнение влияет на человека?
+  </h2>
+
+  <p class="subtitle reveal" style="--order:1"
+    data-ru="Здоровье человека тесно связано с состоянием окружающей среды."
+    data-kz="Адам денсаулығы қоршаған ортаның жағдайымен тығыз байланысты.">
+    Здоровье человека тесно связано с состоянием окружающей среды.
+  </p>
+
+  <div class="two-columns">
+    <div>
+      <div class="info-card reveal" style="--order:2">
+        <span class="icon">🩺</span>
+        <h3 data-ru="Загрязнённый воздух" data-kz="Ластанған ауа">Загрязнённый воздух</h3>
+        <p data-ru="Может вызывать кашель и затруднять дыхание."
+           data-kz="Жөтел тудыруы және тыныс алуды қиындатуы мүмкін.">
+          Может вызывать кашель и затруднять дыхание.
+        </p>
+      </div>
+
+      <div class="info-card reveal" style="--order:3">
+        <span class="icon">💧</span>
+        <h3 data-ru="Грязная вода" data-kz="Ластанған су">Грязная вода</h3>
+        <p data-ru="Может стать причиной инфекций и других заболеваний."
+           data-kz="Инфекциялар мен басқа да ауруларға себеп болуы мүмкін.">
+          Может стать причиной инфекций и других заболеваний.
+        </p>
+      </div>
+
+      <div class="info-card reveal" style="--order:4">
+        <span class="icon">🏭</span>
+        <h3 data-ru="Вредные вещества" data-kz="Зиянды заттар">Вредные вещества</h3>
+        <p data-ru="Длительный контакт с загрязнением повышает риски для здоровья."
+           data-kz="Ластанған ортамен ұзақ байланыс денсаулыққа қауіп төндіреді.">
+          Длительный контакт с загрязнением повышает риски для здоровья.
+        </p>
+      </div>
+    </div>
+
+    <div class="photo-frame reveal" style="--order:2">
+      <img
+        src="https://images.unsplash.com/photo-1563233269-7e86880558a7?auto=format&fit=crop&fm=jpg&q=80&w=1200"
+        alt="Человек в больничной палате"
+        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1200';">
+    </div>
+  </div>
+
+  <p class="reveal" style="--order:5"
+    data-ru="Поэтому важно контролировать выбросы предприятий и качество питьевой воды."
+    data-kz="Сондықтан кәсіпорындардың шығарындыларын және ауыз судың сапасын бақылау маңызды.">
+    Поэтому важно контролировать выбросы предприятий и качество питьевой воды.
+  </p>
+</section>
+
+<!-- СЛАЙД 6 -->
+<section class="slide">
+  <h2 class="reveal" style="--order:0"
+    data-ru="Промышленность Казахстана"
+    data-kz="Қазақстан өнеркәсібі">
+    Промышленность Казахстана
+  </h2>
+
+  <p class="subtitle reveal" style="--order:1"
+    data-ru="Крупные предприятия и основные промышленные регионы страны"
+    data-kz="Елдегі ірі кәсіпорындар мен негізгі өнеркәсіптік аймақтар">
+    Крупные предприятия и основные промышленные регионы страны
+  </p>
+
+  <div class="two-columns">
+    <div>
+      <div class="info-card reveal" style="--order:2">
+        <span class="number-icon">01</span>
+        <h3>«Өзенмұнайгаз» — Маңғыстау</h3>
+        <p data-ru="Одно из известных нефтедобывающих предприятий региона. Работает в районе месторождений Узень и Карамандыбас."
+           data-kz="Өңірдегі белгілі мұнай өндіруші кәсіпорындардың бірі. Өзен және Қарамандыбас кен орындарында жұмыс істейді.">
+          Одно из известных нефтедобывающих предприятий региона. Работает в районе месторождений Узень и Карамандыбас.
+        </p>
+      </div>
+
+      <div class="info-card reveal" style="--order:3">
+        <span class="number-icon">02</span>
+        <h3>«Теңізшевройл» — Атырау</h3>
+        <p data-ru="Крупная нефтедобывающая компания, работающая на месторождении Тенгиз."
+           data-kz="Теңіз кен орнында жұмыс істейтін ірі мұнай өндіруші компания.">
+          Крупная нефтедобывающая компания, работающая на месторождении Тенгиз.
+        </p>
+      </div>
+
+      <div class="info-card reveal" style="--order:4">
+        <span class="number-icon">03</span>
+        <h3>Qarmet — Темиртау</h3>
+        <p data-ru="Предприятие металлургической промышленности, выпускающее сталь и другую металлопродукцию."
+           data-kz="Болат және басқа металл өнімдерін шығаратын металлургия кәсіпорны.">
+          Предприятие металлургической промышленности, выпускающее сталь и другую металлопродукцию.
+        </p>
+      </div>
+
+      <div class="info-card reveal" style="--order:5">
+        <span class="number-icon">04</span>
+        <h3>«Қазмырыш» — Восточный Казахстан</h3>
+        <p data-ru="Крупная компания цветной металлургии, занимающаяся производством цинка, свинца и других металлов."
+           data-kz="Мырыш, қорғасын және басқа металдарды өндіретін ірі түсті металлургия компаниясы.">
+          Крупная компания цветной металлургии, занимающаяся производством цинка, свинца и других металлов.
+        </p>
+      </div>
+    </div>
+
+    <div class="reveal" style="--order:2">
+      <div class="photo-frame">
+        <img class="slide-six-photo"
+          src="https://jsc-omg.com/wp-content/uploads/2025/01/JSC-OZENMUNAIGAS-Production.jpg"
+          alt="Производство компании Өзенмұнайгаз"
+          onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1516937941344-00b4e0337589?w=1200';">
+      </div>
+
+      <div class="info-card">
+        <h3 data-ru="Наш регион — Актау и Мангистау"
+            data-kz="Біздің өңір — Ақтау және Маңғыстау">
+          Наш регион — Актау и Мангистау
+        </h3>
+
+        <p data-ru="Здесь важную роль играют нефтедобыча, энергетика, портовая деятельность и транспорт."
+           data-kz="Мұнда мұнай өндіру, энергетика, порт қызметі және көлік маңызды рөл атқарады.">
+          Здесь важную роль играют нефтедобыча, энергетика, портовая деятельность и транспорт.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <p class="reveal" style="--order:6"
+    data-ru="Промышленность развивает экономику, но требует строгого экологического контроля."
+    data-kz="Өнеркәсіп экономиканы дамытады, бірақ қатаң экологиялық бақылауды қажет етеді.">
+    Промышленность развивает экономику, но требует строгого экологического контроля.
+  </p>
+</section>
+
+<!-- СЛАЙД 7 -->
+<section class="slide">
+  <h2 class="reveal" style="--order:0"
+    data-ru="Как уменьшить вред?"
+    data-kz="Зиянды қалай азайтуға болады?">
+    Как уменьшить вред?
+  </h2>
+
+  <p class="reveal" style="--order:1"
+    data-ru="Для защиты природы необходимо принимать следующие меры:"
+    data-kz="Табиғатты қорғау үшін мынадай шараларды қабылдау қажет:">
+    Для защиты природы необходимо принимать следующие меры:
+  </p>
+
+  <div class="two-columns">
+    <div class="info-card reveal" style="--order:2">
+      <span class="icon">♻️</span>
+      <h3 data-ru="Переработка отходов" data-kz="Қалдықтарды қайта өңдеу">Переработка отходов</h3>
+      <p data-ru="Повторное использование материалов."
+         data-kz="Материалдарды қайта пайдалану.">
+        Повторное использование материалов.
+      </p>
+    </div>
+
+    <div class="info-card reveal" style="--order:3">
+      <span class="icon">🌳</span>
+      <h3 data-ru="Озеленение" data-kz="Көгалдандыру">Озеленение</h3>
+      <p data-ru="Посадка деревьев и защита лесов."
+         data-kz="Ағаш отырғызу және ормандарды қорғау.">
+        Посадка деревьев и защита лесов.
+      </p>
+    </div>
+
+    <div class="info-card reveal" style="--order:4">
+      <span class="icon">⚙️</span>
+      <h3 data-ru="Фильтры на заводах" data-kz="Зауыттарға сүзгілер орнату">Фильтры на заводах</h3>
+      <p data-ru="Очистка выбросов перед попаданием в атмосферу."
+         data-kz="Шығарындыларды атмосфераға түспей тұрып тазарту.">
+        Очистка выбросов перед попаданием в атмосферу.
+      </p>
+    </div>
+
+    <div class="info-card reveal" style="--order:5">
+      <span class="icon">☀️</span>
+      <h3 data-ru="Чистая энергия" data-kz="Таза энергия">Чистая энергия</h3>
+      <p data-ru="Использование солнечной и ветровой энергии."
+         data-kz="Күн және жел энергиясын пайдалану.">
+        Использование солнечной и ветровой энергии.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- СЛАЙД 8 -->
+<section class="slide">
+  <div class="hero">
+    <div>
+      <span class="tag reveal" style="--order:0"
+        data-ru="Наше будущее"
+        data-kz="Біздің болашағымыз">
+        Наше будущее
+      </span>
+
+      <h1 class="reveal" style="--order:1"
+        data-ru="Чистая природа — наша общая ответственность!"
+        data-kz="Таза табиғат — ортақ жауапкершілігіміз!">
+        Чистая природа — наша общая ответственность!
+      </h1>
+
+      <p class="reveal" style="--order:2"
+        data-ru="Каждый человек может внести свой вклад в защиту окружающей среды. Начнём с маленьких действий!"
+        data-kz="Әр адам қоршаған ортаны қорғауға өз үлесін қоса алады. Кішкентай істерден бастайық!">
+        Каждый человек может внести свой вклад в защиту окружающей среды. Начнём с маленьких действий!
+      </p>
+
+      <h3 class="reveal" style="--order:3"
+        data-ru="Спасибо за внимание!"
+        data-kz="Назарларыңызға рақмет!">
+        Спасибо за внимание!
+      </h3>
+    </div>
+
+    <img class="hero-photo reveal" style="--order:2"
+      src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1200"
+      alt="Зелёный лес">
+  </div>
+</section>
+
+<!-- НАВИГАЦИЯ -->
+<div class="navigation">
+  <button class="secondary" onclick="prevSlide()"
+    data-ru="← Назад" data-kz="← Артқа">← Назад</button>
+
+  <div class="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <span class="counter" id="counter">1 / 8</span>
+
+  <button onclick="nextSlide()"
+    data-ru="Далее →" data-kz="Келесі →">Далее →</button>
+</div>
+
+<div class="timer-panel">
+  <button class="secondary" id="pauseButton" onclick="toggleAutoPlay()">
+    ⏸ Пауза
+  </button>
+
+  <span class="timer-text" id="timerText">
+    Автопереключение через 30 секунд
+  </span>
+</div>
+
+</main>
+
+<div class="footer">ECO WORLD · 2026</div>
+
+<script>
+let currentSlide = 0;
+let language = localStorage.getItem("ecoLanguage") || "ru";
+
+const slides = document.querySelectorAll(".slide");
+
+const SLIDE_DURATION = 30000;
+let autoPlayTimer = null;
+let autoPlayEnabled = true;
+
+function showSlide(index) {
+  slides[currentSlide].classList.remove("active");
+
+  currentSlide = (index + slides.length) % slides.length;
+
+  slides[currentSlide].classList.add("active");
+
+  document.getElementById("counter").textContent =
+    (currentSlide + 1) + " / " + slides.length;
+
+  document.getElementById("progressBar").style.width =
+    ((currentSlide + 1) / slides.length * 100) + "%";
+
+  restartAutoPlay();
+}
+
+function nextSlide() {
+  showSlide(currentSlide + 1);
+}
+
+function prevSlide() {
+  showSlide(currentSlide - 1);
+}
+
+function startAutoPlay() {
+  clearInterval(autoPlayTimer);
+
+  if (!autoPlayEnabled) return;
+
+  document.getElementById("timerText").textContent =
+    "Автопереключение через 30 секунд";
+
+  autoPlayTimer = setInterval(() => {
+    showSlide(currentSlide + 1);
+  }, SLIDE_DURATION);
+}
+
+function restartAutoPlay() {
+  clearInterval(autoPlayTimer);
+  startAutoPlay();
+}
+
+function toggleAutoPlay() {
+  autoPlayEnabled = !autoPlayEnabled;
+
+  const button = document.getElementById("pauseButton");
+  const timerText = document.getElementById("timerText");
+
+  if (autoPlayEnabled) {
+    button.textContent = "⏸ Пауза";
+    timerText.textContent = "Автопереключение через 30 секунд";
+    startAutoPlay();
+  } else {
+    clearInterval(autoPlayTimer);
+    button.textContent = "▶ Продолжить";
+    timerText.textContent = "Автопереключение остановлено";
+  }
+}
+
+function changeLanguage() {
+  language = language === "ru" ? "kz" : "ru";
+  localStorage.setItem("ecoLanguage", language);
+
+  document.querySelectorAll("[data-ru]").forEach(element => {
+    element.textContent = element.getAttribute("data-" + language);
+  });
+
+  document.documentElement.lang = language === "ru" ? "ru" : "kk";
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+
+  localStorage.setItem(
+    "ecoTheme",
+    document.body.classList.contains("dark") ? "dark" : "light"
+  );
+}
+
+function fullScreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+}
+
+if (localStorage.getItem("ecoTheme") === "dark") {
+  document.body.classList.add("dark");
+}
+
+if (language === "kz") {
+  document.querySelectorAll("[data-ru]").forEach(element => {
+    element.textContent = element.getAttribute("data-kz");
+  });
+  document.documentElement.lang = "kk";
+}
+
+document.addEventListener("keydown", event => {
+  if (event.key === "ArrowRight") nextSlide();
+  if (event.key === "ArrowLeft") prevSlide();
+});
+
+showSlide(0);
+</script>
+
+</body>
+</html>
+
